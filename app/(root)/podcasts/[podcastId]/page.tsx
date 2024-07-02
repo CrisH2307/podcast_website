@@ -10,15 +10,17 @@ import { useQuery } from "convex/react";
 import Image from "next/image";
 import React from "react";
 
-const PodcastDetail = ({ params: { podcastId } }: { params: { podcastId: Id<"podcasts"> } }) => {
+const PodcastDetails = ({ params: { podcastId } }: { params: { podcastId: Id<"podcasts"> } }) => {
   const { user } = useUser();
+
   const podcast = useQuery(api.podcasts.getPodcastById, { podcastId });
+
   const similarPodcasts = useQuery(api.podcasts.getPodcastByVoiceType, { podcastId });
 
   const isOwner = user?.id === podcast?.authorId;
-  if (!similarPodcasts || !podcast) {
-    return <LoaderSpinner />;
-  }
+
+  if (!similarPodcasts || !podcast) return <LoaderSpinner />;
+
   return (
     <section className="flex w-full flex-col">
       <header className="mt-9 flex items-center justify-between">
@@ -29,7 +31,6 @@ const PodcastDetail = ({ params: { podcastId } }: { params: { podcastId: Id<"pod
         </figure>
       </header>
       <PodcastDetailPlayer isOwner={isOwner} podcastId={podcast._id} {...podcast} />
-
       <p className="text-white-2 text-16 pb-8 pt-[45px] font-medium max-md:text-center">
         {podcast?.podcastDescription}
       </p>
@@ -59,11 +60,11 @@ const PodcastDetail = ({ params: { podcastId } }: { params: { podcastId: Id<"pod
             ))}
           </div>
         ) : (
-          <EmptyState title="No similar podcasts found" butttonLink="/discover" />
+          <EmptyState title="No similar podcasts found" buttonLink="/discover" />
         )}
       </section>
     </section>
   );
 };
 
-export default PodcastDetail;
+export default PodcastDetails;
